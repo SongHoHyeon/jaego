@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="lectureroomDao">
+
+    <select id="lectureroomTotalCount" resultType="int">
+		SELECT count(lectureroom_id) as count FROM LECTUREROOM			    
+	</select> 
+	
+	
+	 <select id="lectureroomList" resultType="LectureroomDto">
+		 select * from (select @ROWNUM:=@ROWNUM+1 as ROWNUM,  N.* from 
+		(select * from LECTUREROOM order by LECTUREROOM_ID DESC) N, 
+		(SELECT @ROWNUM := 0)R ) NN where ROWNUM BETWEEN #{pageBegin} and #{pageEnd}              
+	</select>
+	
+	
+	<select id="select" parameterType="Integer" resultType="LectureroomDto">
+		SELECT * FROM
+		LECTUREROOM WHERE lectureroom_id = #{lectureroomId}
+	</select>
+	
+	
+			
+	<insert id="insert" parameterType="LectureroomDto">
+		INSERT INTO LECTUREROOM
+		(lectureroom_id, lecture_id, mentor_id, lectureroom_title, lectureroom_content, lectureroom_fname, lectureroom_password, member_id)
+		values
+		(#{lectureroomId},
+			#{lectureId}, #{mentorId}, #{lectureroomTitle}, #{lectureroomContent}, #{lectureroomFname}, #{lectureroomPassword}, #{memberId})
+		<!-- <selectKey keyProperty="LectureroomId" resultType="Integer">
+		</selectKey>-->
+	</insert>
+	
+<!--	<insert id="replyinsert" parameterType="LectureroomDto">
+		INSERT INTO LECTUREROOM
+		(lectureroom_id,lecture_id, mentor_id, lectureroom_title, lectureroom_reply, lectureroom_replystatus, lectureroom_password, user_id)
+		values
+		(#{lectureroomId}, #{lectureId}, #{mentorId},
+			#{lectureroomTitle}, #{lectureroomReply}, 1, #{lectureroomPassword}, #{userId})
+		 <selectKey keyProperty="LectureroomId" resultType="Integer">
+		</selectKey>
+	</insert>-->
+	
+	<update id="update" parameterType="lectureroomDto">
+		UPDATE LECTUREROOM SET lectureroom_title = #{lectureroomTitle},
+		lectureroom_content = #{lectureroomContent},
+		member_id = #{memberId},
+		WHERE lectureroom_id = #{lectureroomId} AND lectureroom_password = #{lectureroomPassword}
+	</update>
+	
+	<delete id="delete" parameterType="lectureroomDto">
+		DELETE FROM LECTUREROOM WHERE lectureroom_id = #{lectureroomId}
+		AND lectureroom_password = #{lectureroomPassword}
+	</delete>
+	
+	<delete id="deleteALL">
+		DELETE FROM LECTUREROOM
+	</delete>
+	
+	
+
+	
+</mapper>

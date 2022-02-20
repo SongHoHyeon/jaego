@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<!-- 다른 mapper와 중복되지 않도록 네임스페이스 기재 -->
+<mapper namespace="reply">
+    
+    <!-- 댓글 입력 -->
+    <insert id="insertReply">
+        INSERT INTO reply (RNO, LECTUREROOM_ID, REPLYTEXT, REPLYER)
+        VALUES (reply_seq.NEXTVAL, #{lectureroomId}, #{REPLYTEXT}, #{REPLYER})
+    </insert>
+    
+  
+  
+    
+    <!-- 댓글 목록 -->
+    <select id="listReply" resultType="com.jaego.web.dto.ReplyDto">
+          select * from 
+             (
+              select  ROWNUM as RN , A.* from
+               
+             ( 
+             SELECT * FROM reply  WHERE  lectureroom_id=#{lectureroomId}
+        
+               ORDER BY RNO DESC
+    
+             ) A 
+                
+              )   where RN BETWEEN  #{pageMaker.pageBegin} and #{pageMaker.pageEnd}     
+        
+      
+    </select>
+    
+    
+    <select id="replyTotalCount" resultType="int">
+        select count(lectureroom_id) FROM reply WHERE  lectureroom_id=#{lectureroomId} 
+        
+    </select>
+    
+    
+</mapper>
